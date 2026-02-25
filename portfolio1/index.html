@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anton's Diner — Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #1a4a45;
+      --cream: #f0e8d8;
+    }
+
+    body {
+      background: var(--teal);
+      font-family: 'Montserrat', sans-serif;
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 680px;
+      min-height: 100vh;
+      background: var(--teal);
+      padding: 40px 16px 64px;
+    }
+
+    .diner-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      color: var(--cream);
+      text-transform: uppercase;
+    }
+
+    .menu-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(52px, 20vw, 120px);
+      line-height: 0.85;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+      margin: 0 0 32px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .menu-item {
+      padding: clamp(14px, 3vw, 28px) clamp(10px, 3vw, 24px) clamp(18px, 3.5vw, 32px);
+      border-top: 1px solid rgba(240,232,216,0.25);
+      border-right: 1px solid rgba(240,232,216,0.25);
+    }
+
+    .menu-item:nth-child(even) { border-right: none; }
+    .menu-item:nth-child(3),
+    .menu-item:nth-child(4)    { border-bottom: 1px solid rgba(240,232,216,0.25); }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(15px, 4vw, 22px);
+      color: var(--cream);
+      line-height: 1.2;
+    }
+
+    .item-price {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: clamp(11px, 3vw, 16px);
+      color: var(--cream);
+      white-space: nowrap;
+    }
+
+    .item-desc {
+      font-size: clamp(9px, 2.2vw, 11px);
+      color: rgba(240,232,216,0.65);
+      line-height: 1.6;
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    /* ── Image wrapper for AR badge ── */
+    .img-wrap {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .item-img {
+      width: 100%;
+      height: clamp(110px, 26vw, 200px);
+      object-fit: cover;
+      display: block;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.15);
+      transition: filter 0.2s;
+    }
+
+    .img-wrap:active .item-img,
+    .img-wrap:hover .item-img { filter: brightness(0.85); }
+
+    /* ── Single column on very small screens ── */
+    @media (max-width: 340px) {
+      .menu-grid { grid-template-columns: 1fr; }
+      .menu-item { border-right: none !important; }
+      .menu-item:nth-child(3) { border-bottom: none; }
+      .item-img { height: 180px; }
+    }
+
+    /* AR badge on image */
+    .ar-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(10, 30, 28, 0.78);
+      backdrop-filter: blur(8px);
+      color: #ddb95e;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(201,162,77,0.25);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      pointer-events: none;
+    }
+
+    .ar-dot {
+      width: 5px;
+      height: 5px;
+      background: #ddb95e;
+      border-radius: 50%;
+      box-shadow: 0 0 5px rgba(221,185,94,0.7);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.45; transform: scale(1.5); }
+    }
+
+    /* ── AR Loading Overlay ── */
+    #arLoading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #arLoading.show { display: flex; }
+
+    #arLoading .spinner {
+      width: 36px;
+      height: 36px;
+      border: 2px solid rgba(26,74,69,0.3);
+      border-top-color: #2a6b63;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #arLoading .loading-text {
+      color: #ddb95e;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 14px;
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+
+    <p class="diner-name">Anton's Diner</p>
+    <h1 class="menu-title">MENU</h1>
+
+    <div class="menu-grid">
+
+      <!-- Classic Cheeseburger -->
+      <div class="menu-item">
+        <div class="item-header">
+          <span class="item-name">Classic Cheeseburger</span>
+          <span class="item-price">$18.50</span>
+        </div>
+        <p class="item-desc">Cooked to order beef patty served with tomatoes, onions, and house special sauce, in a soft brioche.</p>
+        <div class="img-wrap" onclick="openAR('cheeseburger')">
+          <img class="item-img" src="image/Classic_Cheeseburger.jpg" alt="Classic Cheeseburger" />
+          <div class="ar-badge"><span class="ar-dot"></span> View AR</div>
+        </div>
+      </div>
+
+      <!-- Classic Beef Fettuccine -->
+      <div class="menu-item">
+        <div class="item-header">
+          <span class="item-name">Classic Beef Fettuccine</span>
+          <span class="item-price">$14.00</span>
+        </div>
+        <p class="item-desc">Fettuccine served in creamy sauce, garnish and bacon bits.</p>
+        <div class="img-wrap" onclick="openAR('fettuccine')">
+          <img class="item-img" src="image/Classic_Beef_Fettuccine.jpg" alt="Classic Beef Fettuccine" />
+          <div class="ar-badge"><span class="ar-dot"></span> View AR</div>
+        </div>
+      </div>
+
+      <!-- Supreme Pizza -->
+      <div class="menu-item">
+        <div class="item-header">
+          <span class="item-name">Supreme Pizza</span>
+          <span class="item-price">$25.00</span>
+        </div>
+        <p class="item-desc">Sourdough based Pizza, served with meat and vegetables topping.</p>
+        <div class="img-wrap" onclick="openAR('pizza')">
+          <img class="item-img" src="image/Supreme_Pizza.jpg" alt="Supreme Pizza" />
+          <div class="ar-badge"><span class="ar-dot"></span> View AR</div>
+        </div>
+      </div>
+
+      <!-- Soft Ube Cake -->
+      <div class="menu-item">
+        <div class="item-header">
+          <span class="item-name">Soft Ube Cake</span>
+          <span class="item-price">$8.50</span>
+        </div>
+        <p class="item-desc">A soft Indonesian style ube cake garnished with dried coconut.</p>
+        <div class="img-wrap" onclick="openAR('ubecake')">
+          <img class="item-img" src="image/Soft_Ube_Cake.jpg" alt="Soft Ube Cake" />
+          <div class="ar-badge"><span class="ar-dot"></span> View AR</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AR Loading Overlay -->
+  <div id="arLoading">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading AR...</div>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // =======================================================
+    // KONFIGURASI MODEL 3D
+    // Letakkan file 3D di: models/<nama>/<nama>_android.glb
+    //                      models/<nama>/<nama>_ios.usdz
+    // =======================================================
+    var MODEL_BASE = 'models';
+
+    var AR_ITEMS = {
+      cheeseburger: {
+        title : 'Classic Cheeseburger',
+        folder: 'PlatedBurger',
+        glb   : 'PlatedBurger.glb',
+        usdz  : 'PlatedBurger.usdz'
+      },
+      fettuccine: {
+        title : 'Classic Beef Fettuccine',
+        folder: 'PlatedPasta',
+        glb   : 'PlatedPasta.glb',
+        usdz  : 'PlatedPasta.usdz'
+      },
+      pizza: {
+        title : 'Supreme Pizza',
+        folder: 'PlatedPizza',
+        glb   : 'PlatedPizza.glb',
+        usdz  : 'PlatedPizza.usdz'
+      },
+      ubecake: {
+        title : 'Soft Ube Cake',
+        folder: 'PurpleCake',
+        glb   : 'PurpleCake.glb',
+        usdz  : 'PurpleCake.usdz'
+      }
+    };
+
+    // =======================================================
+    // DETEKSI OS
+    // =======================================================
+    function getOS() {
+      var ua = navigator.userAgent || navigator.vendor;
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return 'ios';
+      if (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) return 'ios'; // iPad Pro
+      if (/android/i.test(ua)) return 'android';
+      return 'other';
+    }
+
+    // =======================================================
+    // BUILD PATH MODEL
+    // =======================================================
+    function modelPath(item, format) {
+      var cfg  = AR_ITEMS[item];
+      var file = (format === 'ios') ? cfg.usdz : cfg.glb;
+      return MODEL_BASE + '/' + cfg.folder + '/' + file;
+    }
+
+    // =======================================================
+    // iOS — AR Quick Look (Safari native)
+    // Cukup buat <a rel="ar"> lalu .click()
+    // =======================================================
+    function launchIOS(item) {
+      var path    = modelPath(item, 'ios');
+      var fullUrl = new URL(path, window.location.href).href;
+
+      var a   = document.createElement('a');
+      var img = document.createElement('img');
+      a.setAttribute('rel', 'ar');
+      a.setAttribute('href', fullUrl);
+      a.appendChild(img);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // =======================================================
+    // Android — Google Scene Viewer (ar_only mode)
+    // =======================================================
+    function launchAndroid(item) {
+      var path    = modelPath(item, 'android');
+      var fullUrl = new URL(path, window.location.href).href;
+
+      var intentUrl =
+        'intent://arvr.google.com/scene-viewer/1.0' +
+        '?file='      + encodeURIComponent(fullUrl) +
+        '&mode=ar_only' +
+        '&resizable=false' +
+        '&title='     + encodeURIComponent(AR_ITEMS[item].title) +
+        '#Intent;scheme=https' +
+        ';package=com.google.android.googlequicksearchbox' +
+        ';action=android.intent.action.VIEW' +
+        ';S.browser_fallback_url=' + encodeURIComponent(window.location.href) +
+        ';end;';
+
+      window.location.href = intentUrl;
+    }
+
+    // =======================================================
+    // LOADING OVERLAY HELPERS
+    // =======================================================
+    var overlay = document.getElementById('arLoading');
+
+    function showLoading() {
+      overlay.classList.add('show');
+      // Auto-hide setelah 4 detik (fallback jika AR tidak terbuka)
+      setTimeout(hideLoading, 4000);
+    }
+
+    function hideLoading() {
+      overlay.classList.remove('show');
+    }
+
+    // Sembunyikan overlay saat user kembali ke tab
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) hideLoading();
+    });
+
+    // =======================================================
+    // MAIN — dipanggil dari onclick tiap gambar
+    // =======================================================
+    window.openAR = function (item) {
+      if (!AR_ITEMS[item]) return;
+
+      var os = getOS();
+
+      if (os === 'ios') {
+        showLoading();
+        launchIOS(item);
+      } else if (os === 'android') {
+        showLoading();
+        launchAndroid(item);
+      } else {
+        // Desktop: tampilkan pesan
+        alert(
+          'AR hanya tersedia di perangkat mobile.\n\n' +
+          'Buka halaman ini di smartphone (iOS / Android) untuk melihat ' +
+          AR_ITEMS[item].title + ' dalam Augmented Reality.'
+        );
+      }
+    };
+
+  })();
+  </script>
+
+</body>
+</html>
