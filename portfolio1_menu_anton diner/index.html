@@ -65,13 +65,14 @@
     .menu-item:nth-child(7),
     .menu-item:nth-child(8)    { border-bottom: 1px solid rgba(240,232,216,0.25); }
 
+    /* ── KUNCI PERBAIKAN: Menjaga Kiri-Kanan & Tidak Jatuh ── */
     .item-header {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-between; /* Nama di kiri, Harga di kanan */
       align-items: flex-start;
       margin-bottom: 6px;
-      gap: 6px;
-      flex-wrap: wrap;
+      gap: 8px; /* Jarak aman antara nama dan harga */
+      flex-wrap: nowrap; /* MEMAKSA agar tetap 1 baris, tidak turun */
     }
 
     .item-name {
@@ -80,6 +81,7 @@
       font-size: clamp(15px, 4vw, 22px);
       color: var(--cream);
       line-height: 1.2;
+      flex-grow: 1; /* Biarkan nama mengisi sisi kiri yang kosong */
     }
 
     .item-price {
@@ -87,7 +89,8 @@
       font-weight: 700;
       font-size: clamp(11px, 3vw, 16px);
       color: var(--cream);
-      white-space: nowrap;
+      white-space: nowrap; /* Mencegah angka harga terbelah jadi 2 baris */
+      flex-shrink: 0; /* Mencegah ukuran harga menyusut karena terdesak nama */
     }
 
     .item-desc {
@@ -315,8 +318,6 @@
 
     // =======================================================
     // KONFIGURASI MODEL 3D
-    // Letakkan file 3D di: models/<nama>/<nama>_android.glb
-    //                      models/<nama>/<nama>_ios.usdz
     // =======================================================
     var MODEL_BASE = 'models';
 
@@ -393,7 +394,6 @@
 
     // =======================================================
     // iOS — AR Quick Look (Safari native)
-    // Cukup buat <a rel="ar"> lalu .click()
     // =======================================================
     function launchIOS(item) {
       var path    = modelPath(item, 'ios');
@@ -438,7 +438,6 @@
 
     function showLoading() {
       overlay.classList.add('show');
-      // Auto-hide setelah 4 detik (fallback jika AR tidak terbuka)
       setTimeout(hideLoading, 4000);
     }
 
@@ -446,7 +445,6 @@
       overlay.classList.remove('show');
     }
 
-    // Sembunyikan overlay saat user kembali ke tab
     document.addEventListener('visibilitychange', function () {
       if (!document.hidden) hideLoading();
     });
@@ -466,7 +464,6 @@
         showLoading();
         launchAndroid(item);
       } else {
-        // Desktop: tampilkan pesan
         alert(
           'AR hanya tersedia di perangkat mobile.\n\n' +
           'Buka halaman ini di smartphone (iOS / Android) untuk melihat ' +
