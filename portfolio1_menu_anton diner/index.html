@@ -59,29 +59,30 @@
       padding: clamp(14px, 3vw, 28px) clamp(10px, 3vw, 24px) clamp(18px, 3.5vw, 32px);
       border-top: 1px solid rgba(240,232,216,0.25);
       border-right: 1px solid rgba(240,232,216,0.25);
+      display: flex;
+      flex-direction: column;
     }
 
     .menu-item:nth-child(even) { border-right: none; }
     .menu-item:nth-child(7),
     .menu-item:nth-child(8)    { border-bottom: 1px solid rgba(240,232,216,0.25); }
 
-    /* ── KUNCI PERBAIKAN: Menjaga Kiri-Kanan & Tidak Jatuh ── */
     .item-header {
       display: flex;
-      justify-content: space-between; /* Nama di kiri, Harga di kanan */
+      justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 6px;
-      gap: 8px; /* Jarak aman antara nama dan harga */
-      flex-wrap: nowrap; /* MEMAKSA agar tetap 1 baris, tidak turun */
+      gap: 8px;
+      flex-wrap: nowrap;
     }
 
     .item-name {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 400;
-      font-size: clamp(15px, 4vw, 22px);
+      font-size: clamp(13px, 3.5vw, 20px);
       color: var(--cream);
       line-height: 1.2;
-      flex-grow: 1; /* Biarkan nama mengisi sisi kiri yang kosong */
+      flex-grow: 1;
     }
 
     .item-price {
@@ -89,8 +90,8 @@
       font-weight: 700;
       font-size: clamp(11px, 3vw, 16px);
       color: var(--cream);
-      white-space: nowrap; /* Mencegah angka harga terbelah jadi 2 baris */
-      flex-shrink: 0; /* Mencegah ukuran harga menyusut karena terdesak nama */
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .item-desc {
@@ -99,6 +100,7 @@
       line-height: 1.6;
       margin-bottom: 12px;
       font-weight: 400;
+      flex-grow: 1;
     }
 
     /* ── Image wrapper for AR badge ── */
