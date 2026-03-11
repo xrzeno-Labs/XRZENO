@@ -200,12 +200,23 @@
       font-family: 'Montserrat', sans-serif;
     }
 
+
+    /* ── Ornaments hidden by default (mobile first) ── */
+    .corner, .side-ornament, .top-ornament, .bottom-ornament {
+      display: none !important;
+    }
+
     /* ═══════════════════════════════════════════
        DESKTOP ORNAMENTS — hidden on mobile
        Only visible at min-width: 769px
     ═══════════════════════════════════════════ */
 
     @media (min-width: 769px) {
+
+      .corner, .side-ornament, .top-ornament, .bottom-ornament {
+        display: flex !important;
+      }
+      .corner { display: block !important; }
 
       body {
         background:
