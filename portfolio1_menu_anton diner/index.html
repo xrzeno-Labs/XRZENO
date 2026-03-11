@@ -199,9 +199,231 @@
       margin-top: 14px;
       font-family: 'Montserrat', sans-serif;
     }
+
+    /* ═══════════════════════════════════════════
+       DESKTOP ORNAMENTS — hidden on mobile
+       Only visible at min-width: 769px
+    ═══════════════════════════════════════════ */
+
+    @media (min-width: 769px) {
+
+      body {
+        background:
+          radial-gradient(ellipse at 20% 50%, rgba(42,107,99,0.18) 0%, transparent 60%),
+          radial-gradient(ellipse at 80% 50%, rgba(42,107,99,0.18) 0%, transparent 60%),
+          var(--teal);
+      }
+
+      /* Ornament layer fixed behind everything */
+      body::before, body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Outer border frame */
+      body::before {
+        border: 1px solid rgba(221,185,94,0.18);
+        margin: 28px;
+      }
+
+      /* Inner border frame */
+      body::after {
+        border: 1px solid rgba(221,185,94,0.08);
+        margin: 38px;
+      }
+
+      /* Corner ornaments via .page pseudo */
+      .page {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Four corner diamond ornaments */
+      .corner {
+        display: block;
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .corner svg { width: 60px; height: 60px; }
+      .corner-tl { top: 14px;    left: 14px; }
+      .corner-tr { top: 14px;    right: 14px; }
+      .corner-bl { bottom: 14px; left: 14px; }
+      .corner-br { bottom: 14px; right: 14px; }
+      .corner-tr svg, .corner-br svg { transform: scaleX(-1); }
+      .corner-bl svg, .corner-br svg { transform: scaleY(-1); }
+      .corner-br svg { transform: scale(-1, -1); }
+
+      /* Side vertical text ornaments */
+      .side-ornament {
+        display: flex;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 10;
+        align-items: center;
+        gap: 10px;
+      }
+      .side-ornament.left  { left: 52px; flex-direction: column; }
+      .side-ornament.right { right: 52px; flex-direction: column; }
+
+      .side-ornament .line {
+        width: 1px;
+        height: 60px;
+        background: linear-gradient(to bottom, transparent, rgba(221,185,94,0.35), transparent);
+      }
+      .side-ornament .diamond {
+        width: 5px;
+        height: 5px;
+        background: rgba(221,185,94,0.6);
+        transform: rotate(45deg);
+        flex-shrink: 0;
+      }
+      .side-ornament .dot {
+        width: 3px;
+        height: 3px;
+        background: rgba(221,185,94,0.3);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .side-ornament .label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 8px;
+        font-weight: 600;
+        letter-spacing: 0.35em;
+        color: rgba(221,185,94,0.35);
+        text-transform: uppercase;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+      }
+      .side-ornament.right .label {
+        transform: rotate(180deg);
+      }
+
+      /* Top & bottom center ornament bar */
+      .top-ornament, .bottom-ornament {
+        display: flex;
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+        gap: 8px;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .top-ornament    { top: 20px; }
+      .bottom-ornament { bottom: 20px; }
+
+      .top-ornament .bar, .bottom-ornament .bar {
+        width: 50px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(221,185,94,0.4), transparent);
+      }
+      .top-ornament .center-gem, .bottom-ornament .center-gem {
+        width: 6px;
+        height: 6px;
+        background: rgba(221,185,94,0.5);
+        transform: rotate(45deg);
+        flex-shrink: 0;
+      }
+      .top-ornament .mini-dot, .bottom-ornament .mini-dot {
+        width: 3px;
+        height: 3px;
+        background: rgba(221,185,94,0.3);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+    }
   </style>
 </head>
 <body>
+
+  <!-- Desktop ornaments only — hidden on mobile via CSS -->
+  <!-- Corner SVG ornaments -->
+  <span class="corner corner-tl">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="1" x2="1" y2="40"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="1" x2="40" y2="1"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="18" x2="18" y2="1" stroke="rgba(221,185,94,0.2)"  stroke-width="1"/>
+      <rect x="0" y="0" width="4" height="4" rx="0" fill="rgba(221,185,94,0.7)" transform="rotate(45 2 2) translate(-1.4 -1.4)"/>
+      <circle cx="1" cy="40" r="1.5" fill="rgba(221,185,94,0.35)"/>
+      <circle cx="40" cy="1"  r="1.5" fill="rgba(221,185,94,0.35)"/>
+    </svg>
+  </span>
+  <span class="corner corner-tr">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="1" x2="1" y2="40"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="1" x2="40" y2="1"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="18" x2="18" y2="1" stroke="rgba(221,185,94,0.2)"  stroke-width="1"/>
+      <rect x="0" y="0" width="4" height="4" rx="0" fill="rgba(221,185,94,0.7)" transform="rotate(45 2 2) translate(-1.4 -1.4)"/>
+      <circle cx="1" cy="40" r="1.5" fill="rgba(221,185,94,0.35)"/>
+      <circle cx="40" cy="1"  r="1.5" fill="rgba(221,185,94,0.35)"/>
+    </svg>
+  </span>
+  <span class="corner corner-bl">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="1" x2="1" y2="40"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="1" x2="40" y2="1"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="18" x2="18" y2="1" stroke="rgba(221,185,94,0.2)"  stroke-width="1"/>
+      <rect x="0" y="0" width="4" height="4" rx="0" fill="rgba(221,185,94,0.7)" transform="rotate(45 2 2) translate(-1.4 -1.4)"/>
+      <circle cx="1" cy="40" r="1.5" fill="rgba(221,185,94,0.35)"/>
+      <circle cx="40" cy="1"  r="1.5" fill="rgba(221,185,94,0.35)"/>
+    </svg>
+  </span>
+  <span class="corner corner-br">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="1" x2="1" y2="40"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="1" x2="40" y2="1"  stroke="rgba(221,185,94,0.45)" stroke-width="1"/>
+      <line x1="1" y1="18" x2="18" y2="1" stroke="rgba(221,185,94,0.2)"  stroke-width="1"/>
+      <rect x="0" y="0" width="4" height="4" rx="0" fill="rgba(221,185,94,0.7)" transform="rotate(45 2 2) translate(-1.4 -1.4)"/>
+      <circle cx="1" cy="40" r="1.5" fill="rgba(221,185,94,0.35)"/>
+      <circle cx="40" cy="1"  r="1.5" fill="rgba(221,185,94,0.35)"/>
+    </svg>
+  </span>
+
+  <!-- Side ornaments -->
+  <div class="side-ornament left">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="dot"></div>
+    <span class="label">AR Menu</span>
+    <div class="dot"></div>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+  <div class="side-ornament right">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="dot"></div>
+    <span class="label">xrzeno</span>
+    <div class="dot"></div>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+
+  <!-- Top & bottom center ornament -->
+  <div class="top-ornament">
+    <div class="bar"></div>
+    <div class="mini-dot"></div>
+    <div class="center-gem"></div>
+    <div class="mini-dot"></div>
+    <div class="bar"></div>
+  </div>
+  <div class="bottom-ornament">
+    <div class="bar"></div>
+    <div class="mini-dot"></div>
+    <div class="center-gem"></div>
+    <div class="mini-dot"></div>
+    <div class="bar"></div>
+  </div>
+
 
   <div class="page">
 
